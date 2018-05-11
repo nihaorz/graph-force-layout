@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+<div id="container" style="height: 100%"></div>
+<script type="text/javascript" src="https://cdn.bootcss.com/echarts/4.1.0/echarts.min.js"></script>
+<script type="text/javascript">
+
+    /**
+     * 示例地址1：http://echarts.baidu.com/examples/editor.html?c=tree-basic
+     */
+
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    option = null;
+
+    var jsonStr = '{"name":"核心交换机","label":{"backgroundColor":"#C12E34"},"children":[{"name":"汇聚交换机1","label":{"backgroundColor":"#E6B600"},"children":[{"name":"接入交换机1","label":{"backgroundColor":"#0098D9"},"children":[{"name":"172.16.103.20","label":{"backgroundColor":"#2B821D"}},{"name":"172.16.103.21","label":{"backgroundColor":"#2B821D"}},{"name":"172.16.103.22","label":{"backgroundColor":"#2B821D"}},{"name":"172.16.103.23","label":{"backgroundColor":"#2B821D"}},{"name":"172.16.103.24","label":{"backgroundColor":"#2B821D"}}]}]},{"name":"汇聚交换机2","label":{"backgroundColor":"#E6B600"},"children":[{"name":"接入交换机10","label":{"backgroundColor":"#0098D9"},"children":[{"name":"172.16.101.20","label":{"backgroundColor":"#2B821D"}},{"name":"172.16.101.20","label":{"backgroundColor":"#2B821D"}}]}]}]}';
+    var data = JSON.parse(jsonStr);
+
+    var colorPalette = ['#d87c7c', '#919e8b', '#d7ab82', '#6e7074', '#61a0a8', '#efa18d', '#787464', '#cc7e63', '#724e58', '#4b565b'];
+    var colorPalette = ['#c12e34', '#e6b600', '#0098d9', '#2b821d', '#005eaa', '#339ca8', '#cda819', '#32a487'];
+    var colorPalette = ['#C1232B', '#27727B', '#FCCE10', '#E87C25', '#B5C334', '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD', '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'];
+
+    myChart.setOption(option = {
+        title: {
+            text: "网络拓扑树图",
+            subtext: "我是子标题",
+        },
+        tooltip: {
+            trigger: 'item',
+            triggerOn: 'mousemove',
+            formatter: function (node) {
+                return node.data.name;
+            }
+        },
+        graphic: [
+            {
+                type: 'text',
+                z: 101,
+                left: '110',
+                top: '107',
+                style: {
+                    text: "核心交换机",
+                    font: "normal normal 16px -WEBKIT-BODY",
+                    fill: '#fff',
+                    stroke: '#999',
+                    lineWidth: 2,
+                    shadowBlur: 8,
+                    shadowOffsetX: 3,
+                    shadowOffsetY: 3,
+                    shadowColor: 'rgba(0,0,0,0.3)'
+                }
+            }, {
+                type: 'polygon',
+                z: 100,
+                left: '100',
+                top: '100',
+                shape: {
+                    points: [
+                        [0,0],
+                        [100,0],
+                        [100,30],
+                        [0,30],
+                        [0, 0]
+                    ]
+                },
+                style: {
+                    fill: '#c12e34',
+                }
+            }
+        ],
+        series: [
+            {
+                type: 'tree',
+                data: [data],
+
+                top: '1%',
+                left: '7%',
+                bottom: '1%',
+                right: '20%',
+                symbol: "emptyRoundRect",
+                symbolSize: 14,
+                initialTreeDepth: -1, // 展开所有节点
+                label: {
+                    normal: {
+                        position: 'left',
+                        verticalAlign: 'middle',
+                        align: 'right',
+                        fontSize: 14,
+                        color: "#fff",
+                        padding: 8,
+                        borderRadius: 6
+                    },
+                },
+
+                leaves: {
+                    label: {
+                        normal: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'left'
+                        }
+                    }
+                },
+
+                expandAndCollapse: true,
+                animationDuration: 550,
+                animationDurationUpdate: 750
+            }
+        ]
+    });
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+</script>
+</body>
+</html>
