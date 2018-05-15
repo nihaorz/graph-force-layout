@@ -58,13 +58,7 @@
                 left: '100',
                 top: '100',
                 shape: {
-                    points: [
-                        [0,0],
-                        [100,0],
-                        [100,30],
-                        [0,30],
-                        [0, 0]
-                    ]
+                    points: getPolygon([0, 0], [180, 30], 6)
                 },
                 style: {
                     fill: '#c12e34',
@@ -114,6 +108,99 @@
     if (option && typeof option === "object") {
         myChart.setOption(option, true);
     }
+
+
+    var obj = getPolygon([0, 0], [180, 30], 6);
+
+    // getPolygon1([0, 0], [180, 30], 6);
+
+    function getPolygon(upperLeft, bottomRight, radius) {
+        var result = [];
+        var minX = upperLeft[0];
+        var minY = upperLeft[1];
+        var maxX = bottomRight[0];
+        var maxY = bottomRight[1];
+        var offSetArr = [];
+        var arr = [];
+        for (var i = 9; i >= 0; i--) {
+            arr.push(i * 10);
+        }
+        for (var i = 0; i < arr.length; i++) {
+            var x = radius * Math.cos(arr[i] * Math.PI / 180);
+            var y = radius * Math.sin(arr[i] * Math.PI / 180);
+            offSetArr.push({x: x, y: y});
+        }
+        /**
+         * 右上角的点
+         */
+        for (var i = 0; i < offSetArr.length; i++) {
+            var offSet = offSetArr[i];
+            result.push([maxX - radius + offSet.x, radius - offSet.y]);
+        }
+        /**
+         * 右下角的点
+         */
+        for (var i = 0; i < offSetArr.length; i++) {
+            var offSet = offSetArr[i];
+            result.push([maxX - offSet.x, maxY - offSet.y]);
+        }
+        /**
+         * 左下角的点
+         */
+        for (var i = 0; i < offSetArr.length; i++) {
+            var offSet = offSetArr[i];
+            result.push([radius - offSet.x, maxY + offSet.y - radius]);
+        }
+        /**
+         * 左上角的点
+         */
+        for (var i = 0; i < offSetArr.length; i++) {
+            var offSet = offSetArr[i];
+            result.push([offSet.x, minY + offSet.y]);
+        }
+        return result;
+    }
+
+
+    /**
+     * 根据左上角和右下角坐标以及圆角本经获取一个shape
+     * @param upperLeft
+     * @param bottomRight
+     * @param radius
+     */
+    function getPolygon1(upperLeft, bottomRight, radius) {
+        var result = [];
+        var minX = upperLeft[0];
+        var minY = upperLeft[1];
+        var maxX = bottomRight[0];
+        var maxY = bottomRight[1];
+        /**
+         * 右上角的点
+         */
+        for (var x = maxX - radius + 1, y = minY; x <= maxX; x++, y++) {
+            result.push([x, y]);
+        }
+        /**
+         * 右下角的点
+         */
+        for (var x = maxX, y = maxY - radius + 1; y <= maxY; x--, y++) {
+            result.push([x, y]);
+        }
+        /**
+         * 左下角的点
+         */
+        for (var x = minX + radius - 1, y = maxY; x >= minX; x--, y--) {
+            result.push([x, y]);
+        }
+        /**
+         * 左上角的点
+         */
+        for (var x = minX, y = minY + radius - 1; x <= radius - 1; x++, y--) {
+            result.push([x, y]);
+        }
+        return result;
+    }
+
 </script>
 </body>
 </html>
